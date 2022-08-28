@@ -36,9 +36,9 @@ COLLATE = utf8mb4_0900_ai_ci;
 -- Table `videoclub`.`category`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `videoclub`.`category` (
-  `category_id` BIGINT NOT NULL,
+  `category_id` SMALLINT NOT NULL,
   `name` TEXT NULL DEFAULT NULL,
-  `last_update` DATETIME NULL DEFAULT NULL,
+  `last_update` TEXT NULL DEFAULT NULL,
   PRIMARY KEY (`category_id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
@@ -75,9 +75,14 @@ CREATE TABLE IF NOT EXISTS `videoclub`.`film` (
   `rating` TEXT NULL DEFAULT NULL,
   `special_features` TEXT NULL DEFAULT NULL,
   `last_update` DATETIME NULL DEFAULT NULL,
+  `category_id` SMALLINT NULL DEFAULT NULL,
   PRIMARY KEY (`film_id`),
-  INDEX `lang_ID_idx` (`language_id` ASC) VISIBLE,
-  CONSTRAINT `lang_ID`
+  INDEX `category_fk` (`category_id` ASC) VISIBLE,
+  INDEX `language_fk` (`language_id` ASC) VISIBLE,
+  CONSTRAINT `category_fk`
+    FOREIGN KEY (`category_id`)
+    REFERENCES `videoclub`.`category` (`category_id`),
+  CONSTRAINT `language_fk`
     FOREIGN KEY (`language_id`)
     REFERENCES `videoclub`.`language` (`language_id`))
 ENGINE = InnoDB
@@ -91,17 +96,12 @@ COLLATE = utf8mb4_0900_ai_ci;
 CREATE TABLE IF NOT EXISTS `videoclub`.`filmactor` (
   `actor_id` BIGINT NULL DEFAULT NULL,
   `film_id` BIGINT NULL DEFAULT NULL,
-  `category_id` BIGINT NULL DEFAULT NULL,
-  INDEX `filmFK_1_idx` (`film_id` ASC) VISIBLE,
-  INDEX `actorFK_1_idx` (`actor_id` ASC) VISIBLE,
-  INDEX `catFK_1_idx` (`category_id` ASC) VISIBLE,
-  CONSTRAINT `actorFK_1`
+  INDEX `actor_fk` (`actor_id` ASC) VISIBLE,
+  INDEX `film_fk` (`film_id` ASC) VISIBLE,
+  CONSTRAINT `actor_fk`
     FOREIGN KEY (`actor_id`)
     REFERENCES `videoclub`.`actor` (`actor_id`),
-  CONSTRAINT `catFK_1`
-    FOREIGN KEY (`category_id`)
-    REFERENCES `videoclub`.`category` (`category_id`),
-  CONSTRAINT `filmFK_1`
+  CONSTRAINT `film_fk`
     FOREIGN KEY (`film_id`)
     REFERENCES `videoclub`.`film` (`film_id`))
 ENGINE = InnoDB
@@ -118,8 +118,8 @@ CREATE TABLE IF NOT EXISTS `videoclub`.`inventory` (
   `store_id` BIGINT NULL DEFAULT NULL,
   `last_update` DATETIME NULL DEFAULT NULL,
   PRIMARY KEY (`inventory_id`),
-  INDEX `inv_FK1_idx` (`film_id` ASC) VISIBLE,
-  CONSTRAINT `inv_FK1`
+  INDEX `inventory_fk` (`film_id` ASC) VISIBLE,
+  CONSTRAINT `inventory_fk`
     FOREIGN KEY (`film_id`)
     REFERENCES `videoclub`.`film` (`film_id`))
 ENGINE = InnoDB
@@ -138,8 +138,8 @@ CREATE TABLE IF NOT EXISTS `videoclub`.`rental` (
   `return_date` DATETIME NULL DEFAULT NULL,
   `staff_id` BIGINT NULL DEFAULT NULL,
   `last_update` DATETIME NULL DEFAULT NULL,
-  INDEX `invFK_idx` (`inventory_id` ASC) VISIBLE,
-  CONSTRAINT `invFK`
+  INDEX `rental_fk` (`inventory_id` ASC) VISIBLE,
+  CONSTRAINT `rental_fk`
     FOREIGN KEY (`inventory_id`)
     REFERENCES `videoclub`.`inventory` (`inventory_id`))
 ENGINE = InnoDB

@@ -136,31 +136,28 @@ on fa.film_id=f.film_id
 
 select count(f.title) as pelis_per_cat, cat.category_id, cat.name
 from category as cat
-left join filmactor as fa
-on fa.category_id=cat.category_id
 left join film as f
-on f.film_id=fa.film_id
+on f.category_id=cat.category_id
+
 
 group by category_id
+
+order by pelis_per_cat desc
 ;
 
 -- mas alquilados por categoria
 
-select count(cat.name) as cat_mas_alq, cat.name
-from category as cat
-left join filmactor as fa
-on fa.category_id=cat.category_id
-left join film as f
-on f.film_id=fa.film_id
+select count(cat.name) as cuenta, name
+from rental as r
 left join inventory as i
-on f.film_id=i.film_id
-left join rental as r
 on i.inventory_id=r.inventory_id
-where r.rental_id>0
+left join film as f
+on f.film_id=i.film_id
+left join category as cat
+on cat.category_id=f.category_id
 
-group by cat.name
+group by cat.category_id
 
-order by cat_mas_alq desc
+order by cuenta desc
+
 ;
-
-
