@@ -77,8 +77,8 @@ CREATE TABLE IF NOT EXISTS `videoclub`.`film` (
   `last_update` DATETIME NULL DEFAULT NULL,
   `category_id` SMALLINT NULL DEFAULT NULL,
   PRIMARY KEY (`film_id`),
-  INDEX `category_fk` (`category_id` ASC) VISIBLE,
-  INDEX `language_fk` (`language_id` ASC) VISIBLE,
+  INDEX `category_fk_idx` (`category_id` ASC) VISIBLE,
+  INDEX `language_fk_idx` (`language_id` ASC) VISIBLE,
   CONSTRAINT `category_fk`
     FOREIGN KEY (`category_id`)
     REFERENCES `videoclub`.`category` (`category_id`),
@@ -96,8 +96,8 @@ COLLATE = utf8mb4_0900_ai_ci;
 CREATE TABLE IF NOT EXISTS `videoclub`.`filmactor` (
   `actor_id` BIGINT NULL DEFAULT NULL,
   `film_id` BIGINT NULL DEFAULT NULL,
-  INDEX `actor_fk` (`actor_id` ASC) VISIBLE,
-  INDEX `film_fk` (`film_id` ASC) VISIBLE,
+  INDEX `actor_fk_idx` (`actor_id` ASC) VISIBLE,
+  INDEX `film_fk_idx` (`film_id` ASC) VISIBLE,
   CONSTRAINT `actor_fk`
     FOREIGN KEY (`actor_id`)
     REFERENCES `videoclub`.`actor` (`actor_id`),
@@ -118,7 +118,7 @@ CREATE TABLE IF NOT EXISTS `videoclub`.`inventory` (
   `store_id` BIGINT NULL DEFAULT NULL,
   `last_update` DATETIME NULL DEFAULT NULL,
   PRIMARY KEY (`inventory_id`),
-  INDEX `inventory_fk` (`film_id` ASC) VISIBLE,
+  INDEX `inventory_fk_idx` (`film_id` ASC) VISIBLE,
   CONSTRAINT `inventory_fk`
     FOREIGN KEY (`film_id`)
     REFERENCES `videoclub`.`film` (`film_id`))
@@ -138,7 +138,7 @@ CREATE TABLE IF NOT EXISTS `videoclub`.`rental` (
   `return_date` DATETIME NULL DEFAULT NULL,
   `staff_id` BIGINT NULL DEFAULT NULL,
   `last_update` DATETIME NULL DEFAULT NULL,
-  INDEX `rental_fk` (`inventory_id` ASC) VISIBLE,
+  INDEX `rental_fk_idx` (`inventory_id` ASC) VISIBLE,
   CONSTRAINT `rental_fk`
     FOREIGN KEY (`inventory_id`)
     REFERENCES `videoclub`.`inventory` (`inventory_id`))
